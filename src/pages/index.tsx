@@ -17,8 +17,9 @@ export default function Home() {
     try {
       const data = await fetchArticles(query);
       setArticles(data);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      setError(error);
+      setError("Data gagal dimuat, silahkan coba lagi.");
       setLoading(false);
     } finally {
       setLoading(false);
