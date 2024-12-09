@@ -6,6 +6,8 @@ export const languages = {
     searchButton: "Search",
     noArticles: "No articles found. Try another search!",
     noResults: "No articles found.",
+    errorData: "Data failed to load, please try again.",
+    searchHistory: "Search History"
   },
   id: {
     title: "New York Times",
@@ -14,5 +16,7 @@ export const languages = {
     searchButton: "Cari",
     noArticles: "Tidak ada artikel ditemukan. Coba cari lainnya!",
     noResults: "Tidak ada artikel ditemukan.",
+    errorData: "Data gagal dimuat, silahkan coba lagi.",
+    searchHistory: "Riwayat Pencarian"
   },
 };

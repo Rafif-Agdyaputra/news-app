@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import ArticleCard from "@/components/ArticleCard";
 import { Article } from "@/types/article";
 import SearchBar from "@/components/SearchBar";
@@ -12,6 +12,8 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [language, setLanguage] = useState<'en' | 'id'>('en');
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
+
   const currentText = languages[language];
 
   const handleSearch = async () => {
@@ -20,14 +22,31 @@ export default function Home() {
     try {
       const data = await fetchArticles(query);
       setArticles(data);
+      setSearchHistory((prevHistory) => {
+        const updatedHistory = [query, ...prevHistory.filter(item => item !== query)];
+        return updatedHistory.slice(0, 5);
+      });
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      setError("Data gagal dimuat, silahkan coba lagi.");
-      setLoading(false);
+      setError(currentText.errorData);
     } finally {
       setLoading(false);
     }
   };
+
+  const handleHistorySearch = (searchQuery: string) => {
+    setQuery(searchQuery);
+    handleSearch();
+  };
+
+  useEffect(() => {
+    const savedHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+    setSearchHistory(savedHistory);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+  }, [searchHistory]);
 
   const closeErrorModal = () => {
     setError(null);
@@ -55,7 +74,30 @@ export default function Home() {
         </button>
       </div>
 
-      <SearchBar query={query} setQuery={setQuery} onSearch={handleSearch} placeholder={currentText.placeholder} searchButton={currentText.searchButton} />
+      <SearchBar
+        query={query}
+        setQuery={setQuery}
+        onSearch={handleSearch}
+        placeholder={currentText.placeholder}
+        searchButton={currentText.searchButton}
+      />
+
+      {searchHistory.length > 0 && (
+        <div className="mt-4">
+          <h3 className="text-lg font-semibold">{currentText.searchHistory}</h3>
+          <div className="flex space-x-4 mt-2">
+            {searchHistory.map((historyItem, index) => (
+              <button
+                key={index}
+                onClick={() => handleHistorySearch(historyItem)}
+                className="cursor-pointer text-blue-500 hover:text-blue-700 py-1 px-3 rounded-full border border-blue-500 hover:bg-blue-50"
+              >
+                {historyItem}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {loading ? (
         <div className="flex justify-center mt-8">
