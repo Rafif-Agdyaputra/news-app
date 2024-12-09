@@ -85,12 +85,12 @@ export default function Home() {
       {searchHistory.length > 0 && (
         <div className="mt-4">
           <h3 className="text-lg font-semibold">{currentText.searchHistory}</h3>
-          <div className="flex space-x-4 mt-2">
+          <div className="flex space-x-4 mt-2 overflow-x-auto pb-2">
             {searchHistory.map((historyItem, index) => (
               <button
                 key={index}
                 onClick={() => handleHistorySearch(historyItem)}
-                className="cursor-pointer text-blue-500 hover:text-blue-700 py-1 px-3 rounded-full border border-blue-500 hover:bg-blue-50"
+                className="cursor-pointer text-blue-500 hover:text-blue-700 py-1 px-3 rounded-full border border-blue-500 hover:bg-blue-50 min-w-max break-words"
               >
                 {historyItem}
               </button>
